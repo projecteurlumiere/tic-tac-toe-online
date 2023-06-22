@@ -58,7 +58,8 @@ end
 get '/' do
   if !request.websocket?
     assign_unique_id
-    erb :game
+    @template = :entrance
+    erb :layout
   elsif request.websocket?
     request.websocket do |ws|
       ws.onopen do
@@ -67,6 +68,9 @@ get '/' do
 
         @player_id = session[:value]
         @game_id = process_new_player(@player_id)
+        
+        @template = :board
+        erb :layout
 
       end
       ws.onmessage do |msg|

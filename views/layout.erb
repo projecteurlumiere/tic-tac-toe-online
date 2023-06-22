@@ -12,20 +12,7 @@
         <h1>Tic-Tac-Toe Online</h1>
     </header>
     <main>
-        <%= 
-        output = ""
-        i = 0
-        3.times do
-          row = ""
-          3.times do
-            i += 1
-            row += "<div class=\"cell\" id=\"#{i}\"></div>"
-            row
-          end
-          output += "<div class=\"row\">#{row}</div>"
-        end
-        "<div class=\"board\">#{output}</div>"
-        %>
+      <%=erb @template%>
     </main>
 </body>
 </html>
