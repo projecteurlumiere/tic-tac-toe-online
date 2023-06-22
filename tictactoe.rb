@@ -1,18 +1,22 @@
 module TicTacToe
+  SYMBOLS = ["X", "O"]
+
+  attr_accessor :board
+
   class Board
-    def initialize
+    def initialize(player_one_id, player_two_id)
       @size = choose_size
       @rows = @size
       @columns = @size
       @maxturns = @size**2
-      @player_one = Player.new(self)
+      @player_one = Player.new(self, player_one_id, SYMBOLS.sample)
       puts "\nMoving to next player\n"
-      @player_two = Player.new(self)
+      @player_two = Player.new(self, player_two_id, get_opposite_symbol)
       check_symbols
       @change_error = false
       generate_game
-      display
-      game_loop
+      # display
+      # game_loop
     end
 
     def display
@@ -89,7 +93,21 @@ module TicTacToe
       end
     end
 
+    def turn
+      "X" if x_is_legal == true
+      "O" if o_is_legal == true
+    end
+
     private
+
+    def get_opposite_symbol
+      if @player_one.symbol == 'X'
+        'O'
+      else
+        'X'
+      end
+    end
+
     def check_symbols
       while @player_one.get_symbol == @player_two.get_symbol
         puts "\nWell, you two can't play with the same symbols. Choose again\n\nFirst player, come back"
@@ -161,8 +179,13 @@ module TicTacToe
     end
 
     def allow_first_turn
-      @x_is_legal = true
-      @o_is_legal = true
+      if rand(0..1).zero?
+        @x_is_legal = true
+        @o_is_legal = false
+      else
+        @x_is_legal = false
+        @o_is_legal = true
+      end
     end
 
     def get_coordinates(number, symbol)
@@ -256,11 +279,13 @@ module TicTacToe
   end
 
   class Player
-    def initialize(board_name) 
+    attr_accessor :symbol, :id, :symbol
+
+    def initialize(board_name, id, symbol) 
       @board_name = board_name
       puts "\nWhat's your name?\n"
-      @name = gets.chomp.to_s
-      @symbol = choose_symbol
+      @id = id
+      @symbol = symbol
     end
 
     def play(number)
@@ -285,7 +310,3 @@ module TicTacToe
     end
   end
 end
-
-include TicTacToe
-
-board = Board.new

@@ -25,9 +25,15 @@ let socket = new WebSocket("ws://localhost:4567/")
 
 socket.onopen = () => {
   console.log("connection established")
-  socket.send("My name is Ashot");
+  socket.send( JSON.stringify({ turn: "ready"}))
+
 };
 
 socket.onmessage = function(event) {
-  console.log(event.data)
+  if (event.data == "0") {
+    console.log("waiting for game")
+  }
+  else {
+    console.log("event.data")
+  }
 };
