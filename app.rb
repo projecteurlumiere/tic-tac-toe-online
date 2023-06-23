@@ -1,55 +1,13 @@
+require 'json'
 require 'sinatra'
 require 'sinatra-websocket'
 require './tictactoe.rb'
-require 'json'
+require './matchmaker.rb'
 
-include TicTacToe
+matchmaker = Matchmaker.new
 
-$players_online = Hash.new
-$player_queue = Array.new
-$games = Hash.new
-$total_games = 0
 set :sockets, []
 set :server, 'thin'
-
-def assign_unique_id
-  session[:value] = rand(100000000000)
-  puts session[:value].inspect
-end
-
-def process_new_player(player)
-  if $player_queue.empty?
-    $player_queue << player
-    $players_online[player] = {}
-  else
-    game_id = create_game(player)
-    $players_online[player] = {
-      current_game: game_id
-    }
-    game_id
-  end
-end
-
-def create_game(player)
-  $total_games += 1
-  game_id = $total_games
-  player_two = $player_queue.shift
-  game = Game.new(player, player_two) # randomize first turn & add them to hash
-  $games[game_id] = {
-    game: game,
-    player_one: player,
-    player_two: player_two
-  }
-  puts games[game_id] # will it return hash or what?
-  game_id
-end
-
-def get_game_information(game)
-  {
-    current_board: game.board,
-    turn: game.turn,
-  }.to_json
-end
 
 configure do
   enable :sessions
@@ -57,61 +15,127 @@ end
 
 get '/' do
   if !request.websocket?
-    assign_unique_id
-    @template = :entrance
-    erb :layout
+    puts "ws open"
+    unless params['board']
+      @template = :entrance
+      erb :layout
+    else
+      # params[board] equals three. need to arrange for 5
+      @template = :board
+      erb :layout
+    end
+
   elsif request.websocket?
-    request.websocket do |ws|
-      ws.onopen do
-        puts "connection established"
-        settings.sockets << ws
 
-        @player_id = session[:value]
-        @game_id = process_new_player(@player_id)
-        
-        @template = :board
-        erb :layout
+    request.websocket do |websocket|
 
+      websocket.onopen do
+        settings.sockets << websocket # do i really need this? No, i don't
+        session[:value] = matchmaker.process_new_player(websocket)
       end
-      ws.onmessage do |msg|
-        if JSON.parse(msg)["turn"] == "ready" && $player_queue.include?(@player_id)
-          ws.send "0"
-        elsif msg == "ready"
-          @current_game = $players_online[player_id][current_game][game]
-          ws.send get_game_information(@current_game)
-        elsif JSON.parse(msg)[turn].between?(1, 9)
-          ws.send get_game_information(@current_game)
+
+      websocket.onmessage do |message|
+        puts "ws received #{message}"
+        begin
+          response = JSON.parse(message)
+        rescue JSON::ParserError
+          puts "invalid JSON"
+          break # will it break the entire block?
+        end
+
+        if response[:msg] == "0" # look for how to make symbols in js (instead of strings)
+          if matchmaker.players_online[session[:value]].nil?
+            notify_game_not_found
+          elsif matchmaker.players_online[session[:value]]
+            if game_over?
+              matchmaker.delete_player(session[:value])
+              session[:value] = matchmaker.process_new_player(websocket)
+              return
+            else
+              send_out_game_information
+            end
+          end
+        elsif response[:msg].to_i.between?(1,9) # look for how to make symbols in js (instead of strings)
+          send_out_game_information
         end
       end
-      ws.onclose do
 
-
-        settings.sockets.delete(ws)
-        # delete player from the list and from the queues.
+      websocket.onclose do |message|
+        puts "ws closed"
+        matchmaker.delete_player(session[:value])
       end
+      
+      # websocket.onmessage do |msg|
+      #   if JSON.parse(msg)["turn"] == "ready" && $player_queue.include?(@player_id)
+      #     websocket.send "0"
+      #   elsif msg == "ready"
+      #     @current_game = $players_online[player_id][current_game][game]
+      #     websocket.send get_game_information(@current_game)
+      #   elsif JSON.parse(msg)[turn].between?(1, 9)
+      #     websocket.send get_game_information(@current_game)
+      #   end
+      # end
+      # websocket.onclose do
+
+
+      #   settings.sockets.delete(websocket)
+      #   # delete player from the list and from the queues.
+      # end
     end
   end
 end
 
-# post '/' do
-#   player_id = session[:value]
+def notify_game_not_found
+  websocket.send JSON.generate(
+    {
+      found_game: false
+    })
+end
 
-#   if params[:ready_for_game] == "true"
+def send_out_game_information
+  json_message = JSON.generate(get_response_hash(session[:value]))
+  websocket.send json_message
+  opponent_socket = get_opponent_socket(session[:value])
+  opponent_socket.send json_message
+end
 
+def get_response_hash(player_id)
+  matchmaker.players_online[player_id][:current_game].get_response_hash(session[:value])
+end
 
-#     if $players_online[player_id].nil?
-#       game_id = process_new_player(player_id)
-#       status 201
-#     elsif $player_queue.include?(player_id)
-#       status 202
-#     else $players_online[player_id]
-#       status 200
-#       current_game = $players_online[player_id][current_game]
-#       body current_game.to_s
-#     end
+def get_opponent(player_id)
+  matchmaker.players_online[matchmaker.players_online[player_id]][:opponent]
+end
 
-#   # puts "players queue #{$player_queue}"
-#   # puts "players online #{$players_online}"
-#   # puts "games #{$games}"
-#   end
+def get_opponent_socket(player_id)
+  get_opponent(player_id)[:socket]
+end
+
+def game_over?
+  if matchmaker.players_online[session[:value]][:current_game].get_response_hash(session[:value][:win])
+    true
+  else
+    false
+  end
+end
+
+def delete_match
+  matchmaker.delete_player(get_opponent(session[:value]))
+  matchmaker.delete_player(session[:value])
+end
+
+# ws.onmessage do |msg|
+            #   EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+            # end
 # end
+
+# // To server:
+# // msg: 0 or 1-9; integer 0 if ready, 1-9 if make a choice
+
+# // From server:
+# // found_game: boolean; false or true when found game; otherwise UNDEFINED (null)
+# // board: Array; 
+# // turn: boolean; (true if turn is yours)
+# // symbol: X or O; string (this is your symbol)
+# // error: boolean;
+# // win: boolean; (if none then undef)

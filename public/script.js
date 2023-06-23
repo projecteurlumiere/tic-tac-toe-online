@@ -20,10 +20,10 @@ socket.onmessage = async function(event) {
   if (responseObject.found_game == false) return
   else if (responseObject.found_game == true) {
     clearInterval(readyInterval);
-    if (htmlFetched == false) update_main();
+    if (htmlFetched = false) update_main();
     symbol = responseObject.symbol;
   }
-  else if (responseObject.found_game == undefined && responseObject.board) {
+  else if (htmlFetched == true && responseObject.board) {
     update_board(responseObject.board);
 
     if (responseObject.win != undefined) {
