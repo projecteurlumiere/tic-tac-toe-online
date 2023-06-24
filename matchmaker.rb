@@ -12,7 +12,7 @@ class Matchmaker
     #   opponent: [null if none]
   #   }
 
-  @player_queue = Array.new
+  @players_queue = Array.new
 
   # [array of those who wait for a game]
 
@@ -40,13 +40,14 @@ class Matchmaker
     player_id = assign_player_id
     @players_online[player_id] = {
       socket: socket,
-      current_game_id: nil
     }
-    if @player_queue.empty?
-      @player_queue << player_id
+    if @players_queue.empty?
+      @players_queue << player_id
     else
       create_game(player_id)
     end
+    # puts "PLAYER ID IS #{player_id}"
+    # puts "processed new player: #{@players_online[player_id]}\n and his game is #{@players_online[player_id][:current_game]}"
     player_id
   end
 
@@ -58,16 +59,18 @@ class Matchmaker
 
   def create_game(player_one_id)
     # game_id = assign_game_id
-    player_two_id = @player_queue.shift
+    player_two_id = @players_queue.shift
     game = Game.new(player_one_id, player_two_id)
     # db_create_game_id(game, game_id)
     db_update_player_id(player_one_id, player_two_id, game)
+    @players_online[player_one_id]
     db_update_player_id(player_two_id, player_one_id, game)
+    @players_online[player_two_id]
   end
 
   def assign_player_id
     @total_players += 1
-    "#{@total_players}".to_sym
+    player_id = "#{@total_players}".to_sym
   end
 
   # def assign_game_id
@@ -78,7 +81,6 @@ class Matchmaker
   def add_player
     @players_online[assign_player_id] = {
       socket: socket,
-      current_game: nil
     }
   end
 
@@ -87,6 +89,7 @@ class Matchmaker
   # end
   
   def db_update_player_id(player_id, opponent_id, game)
+    puts "db update proced"
     @players_online[player_id][:current_game] = game
     @players_online[player_id][:opponent] = opponent_id
   end

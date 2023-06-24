@@ -1,3 +1,5 @@
+# TODO: server doesn't send anything when game is created
+
 require 'json'
 require 'sinatra'
 require 'sinatra-websocket'
@@ -16,36 +18,44 @@ end
 get '/' do
   if !request.websocket?
     puts "ws open"
-    unless params['board']
-      @template = :entrance
-      erb :layout
-    else
-      # params[board] equals three. need to arrange for 5
+    # if params['board'] == "3"
+    #   # params[board] equals three. need to arrange for 5
       @template = :board
       erb :layout
-    end
+    # else
+    #   @template = :entrance
+    #   erb :layout
+    # end
 
   elsif request.websocket?
 
     request.websocket do |websocket|
 
       websocket.onopen do
+        puts "ws open"
         settings.sockets << websocket # do i really need this? No, i don't
-        session[:value] = matchmaker.process_new_player(websocket)
+        player_id = matchmaker.process_new_player(websocket)
+        puts "#PLAYER ID IN WEBSOCKET IS: #{player_id}"
+        session[:value] = player_id
+        puts "SESSION VALUE: #{session[:value]}"
       end
 
       websocket.onmessage do |message|
         puts "ws received #{message}"
         begin
-          response = JSON.parse(message)
+          response = JSON.parse(message, symbolize_names: true)
         rescue JSON::ParserError
           puts "invalid JSON"
           break # will it break the entire block?
         end
 
-        if response[:msg] == "0" # look for how to make symbols in js (instead of strings)
-          if matchmaker.players_online[session[:value]].nil?
-            notify_game_not_found
+        puts response
+        puts response[:msg]
+
+        if response[:msg] == 0 # look for how to make symbols in js (instead of strings)
+          if matchmaker.players_online[session[:value]][:current_game].nil?
+            puts "condition procs"
+            notify_game_not_found(websocket)
           elsif matchmaker.players_online[session[:value]]
             if game_over?
               matchmaker.delete_player(session[:value])
@@ -63,6 +73,9 @@ get '/' do
       websocket.onclose do |message|
         puts "ws closed"
         matchmaker.delete_player(session[:value])
+        p matchmaker.players_queue
+        matchmaker.players_queue.delete(session[:value])
+        p matchmaker.players_queue
       end
       
       # websocket.onmessage do |msg|
@@ -85,7 +98,8 @@ get '/' do
   end
 end
 
-def notify_game_not_found
+def notify_game_not_found(websocket)
+  websocket.send "haha!"
   websocket.send JSON.generate(
     {
       found_game: false

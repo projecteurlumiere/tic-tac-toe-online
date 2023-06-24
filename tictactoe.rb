@@ -4,7 +4,7 @@ class Game
   attr_accessor :board
 
   def initialize(player_one_id, player_two_id)
-    @size = choose_size
+    @size = 3
     @rows = @size
     @columns = @size
     @maxturns = @size**2

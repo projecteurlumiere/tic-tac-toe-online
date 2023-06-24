@@ -15,7 +15,9 @@ socket.onopen = () => {
 
 
 socket.onmessage = async function(event) {
+  console.log(`${event.data}`)
   let responseObject = JSON.parse(event.data);
+  console.log(`${responseObject}`)
 
   if (responseObject.found_game == false) return
   else if (responseObject.found_game == true) {
