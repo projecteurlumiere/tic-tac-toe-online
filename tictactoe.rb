@@ -1,7 +1,7 @@
 SYMBOLS = ["X", "O"]
 
 class Game
-  attr_accessor :board
+  attr_accessor :board, :player_one, :player_two 
 
   def initialize(player_one_id, player_two_id)
     @size = 3
@@ -17,25 +17,41 @@ class Game
   end
 
   def get_response_hash(player_id)
-    if [player_one.id, player_two.id].include?(player_id)
-      basic_info = {
-        found_game: true,
-        board: @board,
-        turn: turn,
-        error: @change_error,
-        symbol: player_id.symbol
-      }
-      if win.nil?
-        basic_info
-      elsif win == player_id.symbol
-        basic_info.merge({
-          win: true
-        })
-      elsif win != player_id.symbol
-        basic_info.merge({
-          win: false
-        })
-      end
+    if player_id == @player_one.id
+      player_id = @player_one
+    elsif player_id == @player_two.id
+      player_id = @player_two
+    else 
+      return
+    end
+  
+    info = {
+      found_game: true,
+      board: @board,
+      turn: turn,
+      error: @change_error,
+      symbol: player_id.symbol
+    }
+
+    if win.nil?
+      return info
+    elsif win == player_id.symbol
+      info.merge!({
+        win: true
+      })
+    elsif win != player_id.symbol
+      info.merge!({
+        win: false
+      })
+    end
+    info
+  end
+
+  def get_player_class(player_id)
+    if player_id == @player_one
+      @player_one
+    elsif player_id == @player_two
+      @player_two
     end
   end
 
@@ -123,8 +139,8 @@ class Game
   end
 
   def turn
-    "X" if x_is_legal == true
-    "O" if o_is_legal == true
+    "X" if @x_is_legal == true
+    "O" if @o_is_legal == true
   end
 
   def win

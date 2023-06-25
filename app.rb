@@ -6,7 +6,7 @@ require 'sinatra-websocket'
 require './tictactoe.rb'
 require './matchmaker.rb'
 
-matchmaker = Matchmaker.new
+$matchmaker = Matchmaker.new
 
 set :sockets, []
 set :server, 'thin'
@@ -34,7 +34,7 @@ get '/' do
       websocket.onopen do
         puts "ws open"
         settings.sockets << websocket # do i really need this? No, i don't
-        player_id = matchmaker.process_new_player(websocket)
+        player_id = $matchmaker.process_new_player(websocket)
         puts "#PLAYER ID IN WEBSOCKET IS: #{player_id}"
         session[:value] = player_id
         puts "SESSION VALUE: #{session[:value]}"
@@ -49,33 +49,37 @@ get '/' do
           break # will it break the entire block?
         end
 
+        response[:msg] = response[:msg].to_i
+
         puts response
         puts response[:msg]
 
-        if response[:msg] == 0 # look for how to make symbols in js (instead of strings)
-          if matchmaker.players_online[session[:value]][:current_game].nil?
+        if response[:msg].to_i == 0 # look for how to make symbols in js (instead of strings)
+          puts "first condition procs"
+          if $matchmaker.players_online[session[:value]][:current_game].nil?
             puts "condition procs"
             notify_game_not_found(websocket)
-          elsif matchmaker.players_online[session[:value]]
-            if game_over?
-              matchmaker.delete_player(session[:value])
-              session[:value] = matchmaker.process_new_player(websocket)
+          elsif $matchmaker.players_online[session[:value]]
+            if game_over?(session[:value])
+              $matchmaker.delete_player(session[:value])
+              session[:value] = $matchmaker.process_new_player(websocket)
               return
             else
-              send_out_game_information
+              send_out_game_information(websocket)
             end
           end
-        elsif response[:msg].to_i.between?(1,9) # look for how to make symbols in js (instead of strings)
-          send_out_game_information
+        elsif response[:msg].to_i.between?(1, 9) # look for how to make symbols in js (instead of strings)
+          make_a_move(session[:value], response[:msg])
+          send_out_game_information(websocket)
         end
       end
 
       websocket.onclose do |message|
         puts "ws closed"
-        matchmaker.delete_player(session[:value])
-        p matchmaker.players_queue
-        matchmaker.players_queue.delete(session[:value])
-        p matchmaker.players_queue
+        $matchmaker.delete_player(session[:value])
+        p $matchmaker.players_queue
+        $matchmaker.players_queue.delete(session[:value])
+        p $matchmaker.players_queue
       end
       
       # websocket.onmessage do |msg|
@@ -106,7 +110,7 @@ def notify_game_not_found(websocket)
     })
 end
 
-def send_out_game_information
+def send_out_game_information(websocket)
   json_message = JSON.generate(get_response_hash(session[:value]))
   websocket.send json_message
   opponent_socket = get_opponent_socket(session[:value])
@@ -114,19 +118,20 @@ def send_out_game_information
 end
 
 def get_response_hash(player_id)
-  matchmaker.players_online[player_id][:current_game].get_response_hash(session[:value])
+  $matchmaker.players_online[player_id][:current_game].get_response_hash(player_id)
 end
 
 def get_opponent(player_id)
-  matchmaker.players_online[matchmaker.players_online[player_id]][:opponent]
+  $matchmaker.players_online[$matchmaker.players_online[player_id][:opponent]]
 end
 
 def get_opponent_socket(player_id)
   get_opponent(player_id)[:socket]
 end
 
-def game_over?
-  if matchmaker.players_online[session[:value]][:current_game].get_response_hash(session[:value][:win])
+def game_over?(player_id)
+  p get_response_hash(player_id)
+  if get_response_hash(player_id).include?(:win)
     true
   else
     false
@@ -134,8 +139,12 @@ def game_over?
 end
 
 def delete_match
-  matchmaker.delete_player(get_opponent(session[:value]))
-  matchmaker.delete_player(session[:value])
+  $matchmaker.delete_player(get_opponent(session[:value]))
+  $matchmaker.delete_player(session[:value])
+end
+
+def make_a_move(player_id, cell_number)
+  $matchmaker.players_online[player_id][:current_player_class].play(cell_number)
 end
 
 # ws.onmessage do |msg|

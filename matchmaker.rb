@@ -80,7 +80,7 @@ class Matchmaker
 
   def add_player
     @players_online[assign_player_id] = {
-      socket: socket,
+      socket: socket
     }
   end
 
@@ -91,6 +91,7 @@ class Matchmaker
   def db_update_player_id(player_id, opponent_id, game)
     puts "db update proced"
     @players_online[player_id][:current_game] = game
+    @players_online[player_id][:current_player_class] = game.get_player_class(player_id)
     @players_online[player_id][:opponent] = opponent_id
   end
 end
