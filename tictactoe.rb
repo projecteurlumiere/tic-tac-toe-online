@@ -24,9 +24,11 @@ class Game
     else 
       return
     end
-  
+    
+    p "BOARD IS #{@board}"
+    
     info = {
-      board: @board,
+      board: @board[1] + @board[2] + @board[3],
       turn: turn,
       error: @change_error,
       symbol: player_id.symbol

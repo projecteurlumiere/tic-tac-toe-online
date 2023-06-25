@@ -17,7 +17,8 @@ socket.onopen = () => {
 socket.onmessage = async function(event) {
   let responseObject = JSON.parse(event.data);
   console.log(responseObject);
-  console.log(`${responseObject.found_game}`)
+  console.log(`${responseObject.found_game}`);
+  console.log(`html fetched is ${htmlFetched}`)
 
   if (responseObject.found_game == false) return
   else if (responseObject.found_game == true) {
@@ -27,6 +28,12 @@ socket.onmessage = async function(event) {
     symbol = responseObject.symbol;
   }
   else if (htmlFetched == true && responseObject.board) {
+    console.log("procs");
+    statusBar = document.getElementsByClassName("statusBar")[0];
+    cells = document.querySelectorAll(".cell");
+
+    console.log(cells);
+    console.log(statusBar);
     update_board(responseObject.board);
 
     if (responseObject.win != undefined) {
@@ -68,7 +75,7 @@ async function update_main(){
     console.log(response);
     body.innerHTML = response;
     arrange_board();
-    htmlFetched == true;
+    htmlFetched = true;
   }
   else {
     main.innerHTML = "<p>cannot fetch the board :(</p>";
@@ -77,8 +84,6 @@ async function update_main(){
 
 function arrange_board(){
   board = document.getElementsByClassName("board")[0]; 
-  statusBar = document.getElementsByClassName("statusBar")[0];
-  cells = document.querySelectorAll("cell");
 
   board.addEventListener("click", (event) => {
     if (event.target.className != "cell" ||
@@ -88,6 +93,8 @@ function arrange_board(){
 }
 
 function update_board(board_array){
+  console.log("update board procs");
+  console.log(cells)
   i = 0;
   cells.forEach(cell => {
     cell.innerHTML = board_array[i];
