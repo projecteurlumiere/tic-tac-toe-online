@@ -26,7 +26,6 @@ class Game
     end
   
     info = {
-      found_game: true,
       board: @board,
       turn: turn,
       error: @change_error,
@@ -48,9 +47,12 @@ class Game
   end
 
   def get_player_class(player_id)
-    if player_id == @player_one
+    puts "get player class worked"    
+    if player_id == @player_one.id
+      p "player's class is #{@player_one}"
       @player_one
-    elsif player_id == @player_two
+    elsif player_id == @player_two.id
+      p "player's class is #{@player_two}"
       @player_two
     end
   end

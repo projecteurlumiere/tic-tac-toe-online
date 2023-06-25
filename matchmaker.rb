@@ -92,7 +92,9 @@ class Matchmaker
     puts "db update proced"
     @players_online[player_id][:current_game] = game
     @players_online[player_id][:current_player_class] = game.get_player_class(player_id)
+    @players_online[player_id][:game_start_notified] = false
     @players_online[player_id][:opponent] = opponent_id
+    puts @players_online[:current_player_class]
   end
 end
 

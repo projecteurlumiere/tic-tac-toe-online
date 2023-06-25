@@ -64,9 +64,12 @@ get '/' do
           puts "first condition procs"
           if $matchmaker.players_online[session[:value]][:current_game].nil?
             puts "condition procs"
-            notify_game_not_found(websocket)
+            notify_game_status(session[:value], websocket, false)
           elsif $matchmaker.players_online[session[:value]]
-            if game_over?(session[:value])
+            if game_start_notified?(session[:value]) == false
+              notify_game_status(session[:value], websocket, true)
+              send_out_game_information(websocket)
+            elsif game_over?(session[:value])
               $matchmaker.delete_player(session[:value])
               session[:value] = $matchmaker.process_new_player(websocket)
               return
@@ -108,11 +111,12 @@ get '/' do
   end
 end
 
-def notify_game_not_found(websocket)
+def notify_game_status(player_id, websocket, status)
   websocket.send JSON.generate(
     {
-      found_game: false
+      found_game: status
     })
+  $matchmaker.players_online[player_id][:game_start_notified]
 end
 
 def send_out_game_information(websocket)
@@ -150,6 +154,10 @@ end
 
 def make_a_move(player_id, cell_number)
   $matchmaker.players_online[player_id][:current_player_class].play(cell_number)
+end
+
+def game_start_notified?(player_id)
+  $matchmaker.players_online[player_id][:game_start_notified]
 end
 
 # ws.onmessage do |msg|
