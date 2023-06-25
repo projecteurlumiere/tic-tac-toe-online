@@ -10,22 +10,28 @@ $matchmaker = Matchmaker.new
 
 set :sockets, []
 set :server, 'thin'
+set :static_cache_control, [:no_cache]
 
 configure do
   enable :sessions
 end
 
+before do
+  cache_control :no_cache
+end
+
 get '/' do
   if !request.websocket?
     puts "ws open"
-    # if params['board'] == "3"
-    #   # params[board] equals three. need to arrange for 5
+    if params['board'] == "3"
+      puts "board condition procs"
+      # params[board] equals three. need to arrange for 5
       @template = :board
       erb :layout
-    # else
-    #   @template = :entrance
-    #   erb :layout
-    # end
+    else
+      @template = :entrance
+      erb :layout
+    end
 
   elsif request.websocket?
 
@@ -103,7 +109,6 @@ get '/' do
 end
 
 def notify_game_not_found(websocket)
-  websocket.send "haha!"
   websocket.send JSON.generate(
     {
       found_game: false

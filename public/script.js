@@ -4,7 +4,7 @@ let cells;
 let symbol;
 let statusBar;
 
-let htmlFetched;
+let htmlFetched = false;
 
 let socket = new WebSocket("ws://localhost:4567/");
 
@@ -15,14 +15,15 @@ socket.onopen = () => {
 
 
 socket.onmessage = async function(event) {
-  console.log(`${event.data}`)
   let responseObject = JSON.parse(event.data);
-  console.log(`${responseObject}`)
+  console.log(responseObject);
+  console.log(`${responseObject.found_game}`)
 
   if (responseObject.found_game == false) return
   else if (responseObject.found_game == true) {
+    console.log("condition procs")
     clearInterval(readyInterval);
-    if (htmlFetched = false) update_main();
+    if (htmlFetched == false) { update_main() }
     symbol = responseObject.symbol;
   }
   else if (htmlFetched == true && responseObject.board) {
@@ -58,10 +59,14 @@ function send_msg(socket, message){
 }
 
 async function update_main(){
+  console.log("update main works")
   response = await fetch("http://localhost:4567/?board=3");
-  main = document.getElementsByTagName("main")[0];
+  main = document.getElementsByTagName("main")[0]; // needed?
+  body = document.getElementsByTagName("body")[0];
   if (response.ok) {
-    main.innerHTML = response.text();
+    response = await response.text();
+    console.log(response);
+    body.innerHTML = response;
     arrange_board();
     htmlFetched == true;
   }
@@ -71,7 +76,7 @@ async function update_main(){
 }
 
 function arrange_board(){
-  board = document.getElementsByClassName("board")[0];
+  board = document.getElementsByClassName("board")[0]; 
   statusBar = document.getElementsByClassName("statusBar")[0];
   cells = document.querySelectorAll("cell");
 
