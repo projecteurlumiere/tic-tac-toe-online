@@ -1,3 +1,5 @@
+// rematch is offered infinitely
+
 let readyInterval;
 let board;
 let cells;

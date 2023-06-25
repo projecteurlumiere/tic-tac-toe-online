@@ -1,10 +1,9 @@
-# TODO: server doesn't send anything when game is created
-
 require 'json'
 require 'sinatra'
 require 'sinatra-websocket'
-require './tictactoe.rb'
-require './matchmaker.rb'
+require_relative 'tictactoe'
+require_relative 'matchmaker'
+require_relative 'misc'
 
 $matchmaker = Matchmaker.new
 
@@ -61,109 +60,49 @@ get '/' do
         puts response[:msg]
 
         if response[:msg].to_i == 0 # look for how to make symbols in js (instead of strings)
+
           puts "first condition procs"
+
           if $matchmaker.players_online[session[:value]][:current_game].nil?
             puts "condition procs"
             notify_game_status(session[:value], websocket, false)
+
           elsif $matchmaker.players_online[session[:value]]
+
             if game_start_notified?(session[:value]) == false
               notify_game_status(session[:value], websocket, true)
               send_out_game_information(websocket)
+
             elsif game_over?(session[:value])
               $matchmaker.delete_player(session[:value])
               session[:value] = $matchmaker.process_new_player(websocket)
               return
+
             else
               send_out_game_information(websocket)
+
             end
           end
         elsif response[:msg].to_i.between?(1, 9) # look for how to make symbols in js (instead of strings)
           make_a_move(session[:value], response[:msg])
           send_out_game_information(websocket)
+
         end
       end
 
       websocket.onclose do |message|
         puts "ws closed"
+
         $matchmaker.delete_player(session[:value])
         p $matchmaker.players_queue
+
         $matchmaker.players_queue.delete(session[:value])
         p $matchmaker.players_queue
       end
       
-      # websocket.onmessage do |msg|
-      #   if JSON.parse(msg)["turn"] == "ready" && $player_queue.include?(@player_id)
-      #     websocket.send "0"
-      #   elsif msg == "ready"
-      #     @current_game = $players_online[player_id][current_game][game]
-      #     websocket.send get_game_information(@current_game)
-      #   elsif JSON.parse(msg)[turn].between?(1, 9)
-      #     websocket.send get_game_information(@current_game)
-      #   end
-      # end
-      # websocket.onclose do
-
-
-      #   settings.sockets.delete(websocket)
-      #   # delete player from the list and from the queues.
-      # end
     end
   end
 end
-
-def notify_game_status(player_id, websocket, status)
-  websocket.send JSON.generate(
-    {
-      found_game: status
-    })
-  $matchmaker.players_online[player_id][:game_start_notified]
-end
-
-def send_out_game_information(websocket)
-  json_message = JSON.generate(get_response_hash(session[:value]))
-  websocket.send json_message
-  opponent_socket = get_opponent_socket(session[:value])
-  opponent_socket.send json_message
-end
-
-def get_response_hash(player_id)
-  $matchmaker.players_online[player_id][:current_game].get_response_hash(player_id)
-end
-
-def get_opponent(player_id)
-  $matchmaker.players_online[$matchmaker.players_online[player_id][:opponent]]
-end
-
-def get_opponent_socket(player_id)
-  get_opponent(player_id)[:socket]
-end
-
-def game_over?(player_id)
-  p get_response_hash(player_id)
-  if get_response_hash(player_id).include?(:win)
-    true
-  else
-    false
-  end
-end
-
-def delete_match
-  $matchmaker.delete_player(get_opponent(session[:value]))
-  $matchmaker.delete_player(session[:value])
-end
-
-def make_a_move(player_id, cell_number)
-  $matchmaker.players_online[player_id][:current_player_class].play(cell_number)
-end
-
-def game_start_notified?(player_id)
-  $matchmaker.players_online[player_id][:game_start_notified]
-end
-
-# ws.onmessage do |msg|
-            #   EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
-            # end
-# end
 
 # // To server:
 # // msg: 0 or 1-9; integer 0 if ready, 1-9 if make a choice
