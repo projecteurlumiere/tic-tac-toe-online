@@ -30,7 +30,7 @@ get '/' do
     request.websocket do |websocket|
 
       websocket.onopen do
-        session[:value] = $matchmaker.process_new_player(websocket)
+        session[:value] = $matchmaker.process_player(websocket)
         puts "ws open for session #{session[:value]}"
       end
 
@@ -42,27 +42,24 @@ get '/' do
 
         if response[:msg].zero?
           process_zero_response(session[:value], websocket)
-        elsif response[:msg].between?(1, 25)
+        elsif response[:msg].between?(1, 25) && access_player_hash(session[:value])[:current_game]
           make_a_move(session[:value], response[:msg])
           send_out_game_information(websocket, session[:value])
         end
       end
 
       websocket.onclose do |message|
-        puts "ws closed"
-
-        # $matchmaker.delete_player(session[:value])
-        # p $matchmaker.players_queue
-
-        # $matchmaker.players_queue.delete(session[:value])
-        # p $matchmaker.players_queue
+        notify_opponent_of_leaver(session[:value])
+        delete_player_upon_leaving(session[:value])
       end
     end
   end
 end
 
 # // To server:
-# // msg: 0 or 1-9; integer 0 if ready, 1-9 if make a choice
+# // msg: 0 or 1-25; integer 0 if ready, 1-25 if make a choice
+
+# // emoji: emoji string to show
 
 # // From server:
 # // found_game: boolean; false or true when found game; otherwise UNDEFINED (null)
@@ -71,3 +68,4 @@ end
 # // symbol: X or O; string (this is your symbol)
 # // error: boolean;
 # // win: boolean; (if none then undef)
+# // leaver: true (otherwise undefined)

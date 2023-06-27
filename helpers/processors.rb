@@ -17,8 +17,7 @@ def process_zero_response(player_id, websocket)
     notify_game_status(player_id, websocket, false)
   else
     if game_over?(player_id)
-      # $matchmaker.delete_player(player_id)
-      # player_id = $matchmaker.process_new_player(websocket)
+      process_rematch(player_id)
     else
       notify_game_status(player_id, websocket, true) if game_start_notified?(player_id) == false
       send_out_game_information(websocket, player_id)

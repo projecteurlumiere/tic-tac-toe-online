@@ -21,11 +21,11 @@ class Matchmaker
   @total_players = 0
   end
 
-  def process_new_player(socket)
-    player_id = assign_player_id
-    @players_online[player_id] = {
-      socket: socket
-    }
+  def process_player(socket, player_id = nil)
+    if player_id.nil?
+      player_id = assign_player_id
+      add_player(player_id, socket)
+    end
     if @players_queue.empty?
       @players_queue << player_id
     else
@@ -33,6 +33,12 @@ class Matchmaker
     end
     puts "#{player_id} is processed"
     player_id
+  end
+
+  def add_player(player_id, socket)
+    @players_online[player_id] = {
+      socket: socket
+    }
   end
 
   private
@@ -51,30 +57,15 @@ class Matchmaker
     player_id = "#{@total_players}".to_sym
   end
 
-  def add_player
-    @players_online[assign_player_id] = {
-      socket: socket
-    }
-  end
-
   def db_update_player_id(player_id, opponent_id, game)
     puts "db update proced"
-    @players_online[player_id].merge!({
+    @players_online[player_id].merge!(
+      {
       current_game: game,
       current_player_class: game.get_player_class(player_id),
       game_start_notified: false,
-      opponent: opponent_id 
-    })
+      opponent: opponent_id
+      }
+    )
   end
 end
-
-# // To server:
-# // msg: 0 or 1-9; integer 0 if ready, 1-9 if make a choice
-
-# // From server:
-# // found_game: boolean; false or true when found game; otherwise UNDEFINED (null)
-# // board: Array; 
-# // turn: boolean; (true if turn is yours)
-# // symbol: X or O; string (this is your symbol)
-# // error: boolean;
-# // win: boolean; (if none then undef)
