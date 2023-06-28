@@ -1,18 +1,17 @@
-        <div class="gameContainer">
-          <div class="statusBar"></div>
-          <%= 
-          output = ""
-          i = 0
-          @size.times do
-            row = ""
-            @size.times do
-              i += 1
-              row += "<div class=\"cell\" id=\"#{i}\"></div>"
-              row
-            end
-            output += "<div class=\"row\">#{row}</div>"
-          end
-          "<div class=\"board\">#{output}</div>"
-          %>
-        </div>
-        
+<div class="gameContainer">
+  <div class="statusBar"></div>
+  <%= 
+  output = ""
+  i = 0
+  @size.times do
+    row = ""
+    @size.times do
+      i += 1
+      row += "<div class=\"cell\" id=\"#{i}\"></div>"
+      row
+    end
+    output += "<div class=\"row\">#{row}</div>"
+  end
+  "<div class=\"board\">#{output}</div>"
+  %>
+</div>

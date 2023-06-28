@@ -1,5 +1,7 @@
 def process_http_request(parameter = nil)
   puts "parameter is #{parameter}"
+  @server_address = "localhost:4567/"
+  puts "BOARD PROCKED #{parameter}"
   if parameter == '3' || parameter == '5'
     @size = parameter.to_i
     @template = :board

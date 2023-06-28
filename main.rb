@@ -23,7 +23,7 @@ end
 
 get '/' do
   if !request.websocket?
-    puts "#received params are #{params} and borrd is #{params['board']}"
+    puts "#received params are #{params} and board is #{params['board']}"
     process_http_request(params['board'])
 
   elsif request.websocket?
