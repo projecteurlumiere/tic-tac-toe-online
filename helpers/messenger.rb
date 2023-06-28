@@ -23,9 +23,11 @@ def send_out_game_information(websocket, player_id)
 end
 
 def notify_opponent_of_leaver(player_id)
+  if access_player_hash(player_id)[:current_game]
   get_opponent_socket(player_id).send JSON.generate(
     {
       leaver: true
     }
   )
+  end
 end
