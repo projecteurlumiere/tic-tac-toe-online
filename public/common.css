@@ -1,0 +1,38 @@
+* {
+  overflow-y: hidden;
+  overflow-x: hidden;
+  font-family: permanentMarker;
+}
+
+@font-face {
+  font-family: permanentMarker;
+  src: url(fonts/PermanentMarker-Regular.ttf);
+}
+
+:root {
+  --max-width: 600px;
+  --cell-size: 100px;
+  --standard-indent: 5vh;
+}
+
+body {
+  height: 100vh;
+  background-color: #EBE77A
+}
+
+header {
+  text-align: center;
+}
+
+main {
+  padding-top: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.unclickable {
+  pointer-events: none;
+  
+}

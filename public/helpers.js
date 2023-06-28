@@ -28,7 +28,7 @@ async function update_main(boardSize){
 }
 
 function arrange_board(){
-  board = document.getElementsByClassName("board")[0]; 
+  board = document.getElementById("board"); 
 
   board.addEventListener("click", (event) => {
     if (event.target.className != "cell" ||
@@ -42,7 +42,12 @@ function update_board(board_array){
   console.log(cells)
   i = 0;
   cells.forEach(cell => {
-    cell.innerHTML = board_array[i];
+    if (board_array[i] == 'X') {
+      cell.innerHTML = "<img src=/img/x.svg>"
+    }
+    else if (board_array[i] == 'O') {
+      cell.innerHTML = "<img src=/img/o.svg>"
+    }
     i++;
   });
 }
@@ -62,4 +67,22 @@ function offerRematch() {
     ping_ready();
   }
   else socket.close();
+}
+
+function updateAvatars(symbol) {
+  if (symbol == 'X') {
+    avatarLeft.innerHTML = '<img src="img/x_eyes.svg" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">';
+    avatarRight.innerHTML = '<img src="img/o_eyes.svg" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">'
+  }
+  else if (symbol == 'O') {
+    avatarLeft.innerHTML = '<img src="img/o_eyes.svg">';
+    avatarRight.innerHTML = '<img src="img/x_eyes.svg">'
+  }
+  nameLeft.innerHTML = 'You';
+  nameRight.innerHTML = 'Opponent';
+  avatarsSet = true;
+}
+
+enableWaitingAnimation(boardSize); {
+
 }

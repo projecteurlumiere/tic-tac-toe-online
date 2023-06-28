@@ -17,17 +17,16 @@ def notify_game_status(player_id, websocket, status)
 end
 
 def send_out_game_information(websocket, player_id)
-  json_message = JSON.generate(get_player_response_hash(player_id))
-  websocket.send json_message
-  get_opponent_socket(player_id).send json_message
+  websocket.send JSON.generate(get_player_response_hash(player_id))
+  get_opponent_socket(player_id).send JSON.generate(get_player_response_hash(get_opponent_id(player_id)))
 end
 
 def notify_opponent_of_leaver(player_id)
   if access_player_hash(player_id)[:current_game]
-  get_opponent_socket(player_id).send JSON.generate(
-    {
-      leaver: true
-    }
-  )
+    get_opponent_socket(player_id).send JSON.generate(
+      {
+        leaver: true
+      }
+    )
   end
 end

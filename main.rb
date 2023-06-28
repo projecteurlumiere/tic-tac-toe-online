@@ -64,7 +64,7 @@ end
 # // From server:
 # // found_game: boolean; false or true when found game; otherwise UNDEFINED (null)
 # // board: Array; 
-# // turn: boolean; (true if turn is yours)
+# // turn: string x or o;
 # // symbol: X or O; string (this is your symbol)
 # // error: boolean;
 # // win: boolean; (if none then undef)

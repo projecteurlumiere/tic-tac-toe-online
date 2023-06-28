@@ -1,5 +1,16 @@
-<div class="gameContainer">
-  <div class="statusBar"></div>
+    <style type="text/css">
+        :root {
+            --size: <%=@size%>;
+        }
+    </style>
+<div id="gameContainer">
+  <div id="gameContainerTop">
+    <div id="avatarLeft"></div>
+    <div id="nameLeft"></div>
+    <div id="statusBar"></div>
+    <div id="nameRight"></div>
+    <div id="avatarRight"></div>
+  </div>
   <%= 
   output = ""
   i = 0
@@ -12,6 +23,6 @@
     end
     output += "<div class=\"row\">#{row}</div>"
   end
-  "<div class=\"board\">#{output}</div>"
+  "<div id=\"board\">#{output}</div>"
   %>
 </div>

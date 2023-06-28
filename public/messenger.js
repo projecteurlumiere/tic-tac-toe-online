@@ -15,16 +15,24 @@ async function websocket(boardSize){
     console.log(`${responseObject.found_game}`);
     console.log(`html fetched is ${htmlFetched}`)
 
-    if (responseObject.found_game == false) return
+    if (responseObject.found_game == false) {
+      enableWaitingAnimation(boardSize);
+    }
     else if (responseObject.found_game == true) {
       console.log("condition procs")
       clearInterval(readyInterval);
-      symbol = responseObject.symbol;
+      symbol = responseObject.symbol; // do i need this?
     }
     else if (htmlFetched == true && responseObject.board) {
       console.log("procs");
       statusBar = document.getElementsByClassName("statusBar")[0];
       cells = document.querySelectorAll(".cell");
+      avatarLeft = document.getElementById("avatarLeft");
+      avatarRight = document.getElementById("avatarRight");
+      nameLeft = document.getElementById("nameLeft");
+      nameRight = document.getElementById("nameRight");
+      
+      if (avatarsSet == false) { updateAvatars(responseObject.symbol) }
 
       console.log(cells);
       console.log(statusBar);
