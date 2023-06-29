@@ -53,11 +53,18 @@ function update_board(board_array){
 }
 
 function enableInput(boolean){
-  if (boolean) board.classList.remove("unclickable")
-  else board.classList.add("unclickable")
+  console.log("ENABLE INPUT PROCS");
+  if (boolean == true) {
+    board.classList.remove("unclickable");
+    console.log("ENABLE INPUT PROCS TRUE");
+  }
+  else { 
+    board.classList.add("unclickable");
+    console.log("ENABLE INPUT PROCS FALSE");
+  }
 }
 
-function statusBar_message(message) {
+function statusBar_message(message = "") {
   statusBar.innerHTML = `${message}`;
 }
 
@@ -71,18 +78,35 @@ function offerRematch() {
 
 function updateAvatars(symbol) {
   if (symbol == 'X') {
-    avatarLeft.innerHTML = '<img src="img/x_eyes.svg" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">';
-    avatarRight.innerHTML = '<img src="img/o_eyes.svg" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">'
+    avatarLeft.innerHTML = '<img id="avatarLeftImg" src="img/x_eyes.svg" style="-webkit-transform: scaleX(-1) var(--scale); transform: scaleX(-1) var(--scale);">';
+    avatarRight.innerHTML = '<img id="avatarRightImg" src="img/o_eyes.svg" style="-webkit-transform: scaleX(-1) var(--scale); transform: scaleX(-1) var(--scale);">'
   }
   else if (symbol == 'O') {
-    avatarLeft.innerHTML = '<img src="img/o_eyes.svg">';
-    avatarRight.innerHTML = '<img src="img/x_eyes.svg">'
+    avatarLeft.innerHTML = '<img id="avatarLeftImg" src="img/o_eyes.svg" style="transform: var(--scale);">';
+    avatarRight.innerHTML = '<img id="avatarRightImg" src="img/x_eyes.svg" style="transform: var(--scale);">'
   }
   nameLeft.innerHTML = 'You';
   nameRight.innerHTML = 'Opponent';
   avatarsSet = true;
 }
 
-enableWaitingAnimation(boardSize); {
+function enableWaitingAnimation(boolean, boardSize = undefined) {
+  if (boolean == true) {
+    statusBar_message("Searching for opponent");
+  }
+  else if (boolean == false) {
+    statusBar_message();
+  }
+}
 
+function highlightWhoseTurn(turn) {
+  console.log("WHOSE TURN PROCS")
+  if (turn == true) {
+    avatarRightImg.classList.remove("playing");
+    avatarLeftImg.classList.add("playing");
+  }
+  else if (turn == false) {
+    avatarRightImg.classList.add("playing");
+    avatarLeftImg.classList.remove("playing");
+  }
 }

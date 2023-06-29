@@ -26,6 +26,7 @@ class Game
     end
     
     p "BOARD IS #{@board}"
+    p "TURN IS #{turn}"
     
     info = {
       board: @board[1] + @board[2] + @board[3],
@@ -143,8 +144,13 @@ class Game
   end
 
   def turn
-    "X" if @x_is_legal == true
-    "O" if @o_is_legal == true
+    puts "x is legal = #{@x_is_legal}"
+    puts "o is legal = #{@o_is_legal}"
+    if @x_is_legal == true
+      "X"
+    elsif @o_is_legal == true
+      "O"
+    end
   end
 
   def win

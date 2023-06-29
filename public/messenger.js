@@ -16,40 +16,50 @@ async function websocket(boardSize){
     console.log(`html fetched is ${htmlFetched}`)
 
     if (responseObject.found_game == false) {
-      enableWaitingAnimation(boardSize);
+      statusBar = document.getElementById("statusBar");
+      enableWaitingAnimation(true, boardSize);
     }
     else if (responseObject.found_game == true) {
-      console.log("condition procs")
+      console.log("condition procs");
+      enableWaitingAnimation(false);
       clearInterval(readyInterval);
       symbol = responseObject.symbol; // do i need this?
     }
     else if (htmlFetched == true && responseObject.board) {
       console.log("procs");
-      statusBar = document.getElementsByClassName("statusBar")[0];
+      
       cells = document.querySelectorAll(".cell");
       avatarLeft = document.getElementById("avatarLeft");
       avatarRight = document.getElementById("avatarRight");
       nameLeft = document.getElementById("nameLeft");
       nameRight = document.getElementById("nameRight");
+
       
       if (avatarsSet == false) { updateAvatars(responseObject.symbol) }
+      
+      avatarLeftImg = document.getElementById("avatarLeftImg");
+      avatarRightImg = document.getElementById("avatarRightImg");
 
       console.log(cells);
       console.log(statusBar);
       update_board(responseObject.board);
 
+      console.log(`TURN IS ${responseObject.turn} and PLAYER'S SYMBOL IS ${responseObject.symbol}`)
+      
       if (responseObject.win != undefined) {
         enableInput(false);
-        if (responseObject.win) statusBar_message("you win")
-        else statusBar_message("you lose");
+        // if (responseObject.win) statusBar_message("you win")
+        // else statusBar_message("you lose");
         offerRematch();
       }
-      else if (responseObject.turn == true) {
+      else if (responseObject.turn == responseObject.symbol) {
+        highlightWhoseTurn(true);
         enableInput(true);
-        statusBar_message("your turn");
+        // statusBar_message("your turn");
       }
-      else if (responseObject.turn == false) {
-        statusBar_message("opponent's turn");
+      else if (responseObject.turn != responseObject.symbol) {
+        // statusBar_message("opponent's turn");
+        highlightWhoseTurn(false);
         enableInput(false);
       }
     }

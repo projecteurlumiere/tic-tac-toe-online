@@ -24,19 +24,38 @@
 }
 
 #avatarLeft,
+#avatarRight,
+#gameContainerTop,
+#gameContainer {
+  overflow: visible;
+}
+
+#avatarLeft,
 #avatarRight {
   height: var(--cell-size);
+}
+
+#avatarLeftImg,
+#avatarRightImg {
+  transition: all 2s ease;
+}
+
+.playing {
+  --scale: scale(1.20);
 }
 
 #nameRight {
   text-align: right;
 }
 
+#statusBar {
+  text-align: center;
+}
+
 #board {
   display: flex;
   width: fit-content;
   flex-direction: column;
-
 }
 
 .row {

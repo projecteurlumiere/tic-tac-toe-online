@@ -13,6 +13,8 @@
   --max-width: 600px;
   --cell-size: 100px;
   --standard-indent: 5vh;
+  --scale:  scale(0.80); 
+  /* EMPTY VARIABLES AAAA */
 }
 
 body {
