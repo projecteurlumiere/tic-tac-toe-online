@@ -1,8 +1,7 @@
 // rematch is offered infinitely
 
-let buttons = document.getElementsByClassName("buttonsSize");
+let buttonsSize = document.getElementsByClassName("buttonsSize");
 
-Array.from(buttons).forEach(element => { element.addEventListener("click", () => {
-  console.log("click happens")  
-  websocket(element.attributes["data-size"].value);
+Array.from(buttonsSize).forEach(button => { button.addEventListener("click", () => {
+  websocket(button.attributes["data-size"].value);
 })});
