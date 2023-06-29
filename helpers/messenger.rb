@@ -16,6 +16,11 @@ def notify_game_status(player_id, websocket, status)
   access_player_hash(player_id)[:game_start_notified] = true
 end
 
+def notify_both_game_status(player_id, websocket, status)
+  notify_game_status(player_id, websocket, status)
+  notify_game_status(get_opponent_id(player_id), get_opponent_socket(player_id), status)
+end
+
 def send_out_game_information(websocket, player_id)
   websocket.send JSON.generate(get_player_response_hash(player_id))
   get_opponent_socket(player_id).send JSON.generate(get_player_response_hash(get_opponent_id(player_id)))

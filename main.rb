@@ -1,8 +1,9 @@
 require 'sinatra'
 require 'sinatra-websocket'
+require 'require_all'
 
 require 'json'
-require 'require_all'
+require 'pathname'
 
 require_relative 'tictactoe'
 require_relative 'matchmaker'

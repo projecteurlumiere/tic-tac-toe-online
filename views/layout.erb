@@ -4,13 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic-Tac-Toe Online</title>
-    <link rel="stylesheet" href="/common.css">
-    <link rel="stylesheet" href="/entrance.css">
-    <link rel="stylesheet" href ="/board.css">
-    <script defer>let serverAddress = "<%=@server_address%>"</script>
-    <script defer src="/main.js"></script>
-    <script defer src="/messenger.js"></script>
-    <script defer src="/helpers.js"></script>
+    <%=
+      styles_paths_array = Dir.glob("./public/styles/*.css").map do |element|
+        element.sub!("./public/", "./")
+      end
+      output = ""
+      styles_paths_array.each do |style_path|
+        output += "<link rel=\"stylesheet\" href=\"#{style_path}\">\n"
+      end
+      output
+    %>
+    <script defer>
+      let serverAddress = "<%=@server_address%>"
+    </script>
+    <%= 
+      js_paths_array = Dir.glob("./public/js/**/*.js").map do |element|
+        element.sub!("./public/", "./")
+      end
+      output = ""
+      js_paths_array.each do |js_path|
+        output += "<script defer src=\"#{js_path}\"></script>\n"
+      end
+      output
+    %>
 </head>
 <body>
     <header>
