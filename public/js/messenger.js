@@ -30,7 +30,7 @@ async function websocket(boardSize) {
       updateBoard(responseObject.board);
       
       if (responseObject.win != undefined) {
-        enableInput(false);
+        // enableInput(false);
         // offerRematch();
       }
       else if (responseObject.turn == responseObject.symbol) {

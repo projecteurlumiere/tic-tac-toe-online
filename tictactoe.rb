@@ -93,25 +93,26 @@ class Game
   end
 
   def change_board(number, symbol)
-    if legal_number?(number)
-      get_coordinates(number, symbol)
-      if legal_symbol?(symbol)
-        process_turn(symbol)
-        set_legality(symbol)
-        @turn += 1
-        @change_error = false
-      else
-        puts 'ERROR: ILLEGAL SYMBOL'
-        @change_error = true
-      end
-    else
-      puts 'ERROR: ILLEGAL NUMBER'
-      @change_error = true
-    end
-    display
-    get_winner
     if gameover?
       puts "\nGAME OVER\n"
+    else
+      if legal_number?(number)
+        get_coordinates(number, symbol)
+        if legal_symbol?(symbol)
+          process_turn(symbol)
+          set_legality(symbol)
+          @turn += 1
+          @change_error = false
+        else
+          puts 'ERROR: ILLEGAL SYMBOL'
+          @change_error = true
+        end
+      else
+        puts 'ERROR: ILLEGAL NUMBER'
+        @change_error = true
+      end
+      display
+      get_winner
     end
   end
 
