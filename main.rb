@@ -58,7 +58,7 @@ get '/' do
 end
 
 # // To server:
-# // msg: 0 or 1-25; integer 0 if ready, 1-25 if make a choice
+# // msg: -1, 0 or 1-25; integer -1 if leave game, 0 if ready, 1-25 if make a choice
 
 # // emoji: emoji string to show
 

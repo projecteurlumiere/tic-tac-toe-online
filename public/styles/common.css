@@ -12,6 +12,7 @@
 :root {
   --max-width: 600px;
   --cell-size: 100px;
+  --half-cell-size: calc(var(--cell-size) / 2);
   --standard-indent: 5vh;
   --scale:  scale(0.80); 
   /* EMPTY VARIABLES AAAA */

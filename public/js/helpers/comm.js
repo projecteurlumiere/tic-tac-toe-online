@@ -7,3 +7,7 @@ function sendMsg(socket, message){
     msg: `${message}`
   }))
 }
+
+function notifyLeaveGame(){
+  sendMsg(socket, "leave");
+}
