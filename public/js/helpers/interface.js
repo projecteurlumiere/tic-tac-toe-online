@@ -39,12 +39,14 @@ function arrangeBoard() {
     }
     else {
       sendMsg(socket, event.target.id);
+      prePlaceSymbol(event.target, currentSymbol);
     }
   })
 }
 
 function resetBoard(){ 
   updateAvatars();
+  currentSymbolSet = false;
   setStatusBarMessage();
   updateBoard();
 }
@@ -92,6 +94,7 @@ function setStatusBarMessage(message = "") {
 //   }
 // }
 
+
 function updateAvatars(symbol = undefined) {
   if (symbol == undefined) {
     [avatarLeft, avatarRight, nameLeft, nameRight].forEach(element => {
@@ -108,7 +111,7 @@ function updateAvatars(symbol = undefined) {
       avatarLeft.innerHTML = '<img id="avatarLeftImg" src="img/o_eyes.svg" style="transform: var(--scale);">';
       avatarRight.innerHTML = '<img id="avatarRightImg" src="img/x_eyes.svg" style="transform: var(--scale);">'
     }
-    
+
     nameLeft.innerHTML = 'You';
     nameRight.innerHTML = 'Opponent';
     avatarsSet = true;
@@ -147,5 +150,11 @@ function processGameOver(winlose = undefined) {
   else if (winlose == false) {
     setStatusBarMessage("You lose!");
     gameFinished = true;
+  }
+}
+
+function prePlaceSymbol(cell) {
+  if (cell.innerHTML == "") {
+    cell.innerHTML = `<img src=/img/${currentSymbol}.svg>`
   }
 }

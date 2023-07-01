@@ -14,8 +14,9 @@ let avatarLeftImg;
 let avatarRightImg;
 let nameLeft;
 let nameRight;
-let symbol;
+let currentSymbol;
 
 let htmlFetched = false;
 let avatarsSet = false;
+let currentSymbolSet = false;
 let gameFinished = false;

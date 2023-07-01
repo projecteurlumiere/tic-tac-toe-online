@@ -29,7 +29,12 @@ async function websocket(boardSize) {
     }
     else if (htmlFetched == true && responseObject.board) {
       gameFinished = false
-      
+
+      if (currentSymbolSet == false) {
+        currentSymbol = responseObject.symbol.toLowerCase();
+        currentSymbolSet = true;
+      }
+
       if (avatarsSet == false) { 
         updateAvatars(responseObject.symbol);
         selectAvatars();
