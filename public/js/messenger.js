@@ -13,6 +13,8 @@ async function websocket(boardSize) {
 
   socket.onmessage = async function(event) {
     let responseObject = JSON.parse(event.data);
+    console.log(responseObject);
+    console.log(responseObject.leaver)
 
     if (responseObject.found_game == false) {
       enableWaitingAnimation(true, boardSize);
@@ -20,7 +22,13 @@ async function websocket(boardSize) {
     else if (responseObject.found_game == true) {
       enableWaitingAnimation(false);
     }
+    else if (responseObject.leaver == true) {
+      console.log("leaver procs");
+      enableInput(false);
+      processGameOver();
+    }
     else if (htmlFetched == true && responseObject.board) {
+      gameFinished = false
       
       if (avatarsSet == false) { 
         updateAvatars(responseObject.symbol);
@@ -28,12 +36,8 @@ async function websocket(boardSize) {
       }
 
       updateBoard(responseObject.board);
-      
-      if (responseObject.leaver == true) {
-        processGameOver(responseObject.win);
-        enableInput(false);
-      }
-      else if (responseObject.win != undefined) {
+
+      if (responseObject.win != undefined) {
         processGameOver(responseObject.win);
         enableInput(false);
       }

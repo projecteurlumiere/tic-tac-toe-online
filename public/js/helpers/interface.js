@@ -137,13 +137,15 @@ function highlightWhoseTurn(turn) {
 }
 
 function processGameOver(winlose = undefined) {
-  if (winlose == undefined) {
+  if (winlose == undefined && gameFinished == false) {
     setStatusBarMessage("Opponent Left");
   }
   else if (winlose == true) {
     setStatusBarMessage("You win!");
+    gameFinished = true;
   }
   else if (winlose == false) {
     setStatusBarMessage("You lose!");
+    gameFinished = true;
   }
 }

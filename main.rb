@@ -39,13 +39,17 @@ get '/' do
         puts "session #{session[:value]} received #{message}"
         response = parse_json(message)
 
-        response[:msg] = response[:msg].to_i if response[:msg].to_i.between?(0, 25)
+        response[:msg] = response[:msg].to_i if response[:msg].to_i.between?(-1, 25)
 
         if response[:msg].zero?
           process_zero_response(session[:value], websocket)
-        elsif response[:msg].between?(1, 25) && access_player_hash(session[:value])[:current_game]
+        elsif response[:msg] == -1 && game_exist?(session[:value])
+          process_leaver_response(session[:value], websocket)
+        elsif response[:msg] == -1 && !game_exist?(session[:value])
+          rematch(session[:value], websocket)
+        elsif response[:msg].between?(1, 25) && game_exist?(session[:value])
           make_a_move(session[:value], response[:msg])
-          send_out_game_information(websocket, session[:value])
+          send_out_game_information(session[:value], websocket)
         end
       end
 
@@ -58,9 +62,9 @@ get '/' do
 end
 
 # // To server:
-# // msg: -1, 0 or 1-25; integer -1 if leave game, 0 if ready, 1-25 if make a choice
+# // msg: -1, 0 or 1-25; integer -1 if leave game, 0 if ready, 1-25 if make a choice TO DO
 
-# // emoji: emoji string to show
+# // emoji: emoji string to show TO DO
 
 # // From server:
 # // found_game: boolean; false or true when found game; otherwise UNDEFINED (null)
@@ -69,4 +73,4 @@ end
 # // symbol: X or O; string (this is your symbol)
 # // error: boolean;
 # // win: boolean; (if none then undef)
-# // leaver: true (otherwise undefined)
+# // leaver: true (otherwise undefined) TO DO 

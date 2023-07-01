@@ -18,3 +18,4 @@ let symbol;
 
 let htmlFetched = false;
 let avatarsSet = false;
+let gameFinished = false;

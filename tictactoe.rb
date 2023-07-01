@@ -35,6 +35,8 @@ class Game
       symbol: player_id.symbol
     }
 
+    puts "!!!!player's symbol is #{player_id.symbol} and win is #{win}"
+
     if win.nil?
       return info
     elsif win == player_id.symbol
@@ -95,6 +97,7 @@ class Game
   def change_board(number, symbol)
     if gameover?
       puts "\nGAME OVER\n"
+      get_winner
     else
       if legal_number?(number)
         get_coordinates(number, symbol)
@@ -155,8 +158,11 @@ class Game
   end
 
   def win
-    "X" if @x_wins
-    "O" if @o_wins
+    if @x_wins
+      "X" 
+    elsif @o_wins
+      "O"
+    end
   end
 
   private

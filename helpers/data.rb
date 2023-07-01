@@ -55,7 +55,11 @@ def delete_player(player_id)
   $matchmaker.players_online[player_id] = nil
 end
 
-def process_rematch(player_id)
-  delete_current_game(player_id)
-  $matchmaker.process_player(websocket, player_id)
+def rematch(player_id, websocket)
+  delete_current_game(player_id) if game_exist?(player_id)
+  $matchmaker.process_player(player_id, websocket)
+end
+
+def game_exist?(player_id)
+  access_player_hash(player_id)[:current_game] ? true : false
 end

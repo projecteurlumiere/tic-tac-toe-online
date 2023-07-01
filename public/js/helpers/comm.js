@@ -9,5 +9,5 @@ function sendMsg(socket, message){
 }
 
 function notifyLeaveGame(){
-  sendMsg(socket, "leave");
+  sendMsg(socket, -1);
 }
