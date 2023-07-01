@@ -45,6 +45,7 @@ function arrangeBoard() {
 
 function resetBoard(){ 
   updateAvatars();
+  setStatusBarMessage();
   updateBoard();
 }
 
