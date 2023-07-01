@@ -134,3 +134,15 @@ function highlightWhoseTurn(turn) {
     avatarLeftImg.classList.remove("playing");
   }
 }
+
+function processGameOver(winlose = undefined) {
+  if (winlose == undefined) {
+    setStatusBarMessage("Opponent Left");
+  }
+  else if (winlose == true) {
+    setStatusBarMessage("You win!");
+  }
+  else if (winlose == false) {
+    setStatusBarMessage("You lose!");
+  }
+}

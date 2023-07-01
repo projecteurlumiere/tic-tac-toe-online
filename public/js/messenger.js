@@ -29,9 +29,13 @@ async function websocket(boardSize) {
 
       updateBoard(responseObject.board);
       
-      if (responseObject.win != undefined) {
+      if (responseObject.leaver == true) {
+        processGameOver(responseObject.win);
         enableInput(false);
-        // offerRematch();
+      }
+      else if (responseObject.win != undefined) {
+        processGameOver(responseObject.win);
+        enableInput(false);
       }
       else if (responseObject.turn == responseObject.symbol) {
         highlightWhoseTurn(true);
