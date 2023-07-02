@@ -7,6 +7,7 @@ def process_http_request(parameter = nil)
     @size = parameter.to_i
     erb :board
   else
+    @template = :entrance
     erb :not_layout
   end
 end
