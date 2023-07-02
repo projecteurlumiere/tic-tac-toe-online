@@ -1,0 +1,3 @@
+---
+:server_address: localhost:4567/
+:ip_bind: 0.0.0.0

@@ -3,16 +3,20 @@ require 'sinatra-websocket'
 require 'require_all'
 
 require 'json'
+require 'yaml'
 require 'pathname'
 
 require_relative 'tictactoe'
 require_relative 'matchmaker'
 require_all 'helpers'
 
+$settings_hash = YAML.load(File.read("settings.yaml"))
+
 $matchmaker = Matchmaker.new
 
 set :server, 'thin'
 set :static_cache_control, [:no_cache]
+set :bind, $settings_hash[:ip_bind]
 
 configure do
   enable :sessions
