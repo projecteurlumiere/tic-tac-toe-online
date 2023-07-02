@@ -121,9 +121,21 @@ function updateAvatars(symbol = undefined) {
 function enableWaitingAnimation(boolean, boardSize = undefined) {
   if (boolean == true) {
     setStatusBarMessage("Searching for opponent");
+    cells[getCentralCell()].innerHTML = `<img src=/img/searching.svg>`
+    
   }
   else if (boolean == false) {
     setStatusBarMessage();
+    cells[getCentralCell()].innerHTML = ""
+  }
+}
+
+function getCentralCell(){
+  if (cells.length == 9) {
+    return 2 - 1
+  }
+  else if (cells.length == 25) {
+    return 3 - 1
   }
 }
 
