@@ -3,13 +3,12 @@ def process_http_request(parameter = nil)
   @server_address = $settings_hash[:server_address]
   puts "BOARD PROCKED #{parameter}"
   if parameter == '3' || parameter == '5'
+    puts "PARAMETER PROCS"
     @size = parameter.to_i
-    @template = :board
+    erb :board
   else
-    @template = :entrance
+    erb :not_layout
   end
-
-  erb :layout
 end
 
 def process_zero_response(player_id, websocket)

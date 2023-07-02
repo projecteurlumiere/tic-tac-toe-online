@@ -2,7 +2,7 @@ async function updateMain(boardSize){
   response = await fetch(`http://${serverAddress}?board=${boardSize}`);
   if (response.ok) {
     response = await response.text();
-    body.innerHTML = response;
+    main.innerHTML = response;
     arrangeButtons();
     arrangeBoard();
     htmlFetched = true;
