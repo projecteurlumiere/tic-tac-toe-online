@@ -18,9 +18,11 @@ async function websocket(boardSize) {
 
     if (responseObject.found_game == false) {
       enableWaitingAnimation(true, boardSize);
+      enableInput(false)
     }
     else if (responseObject.found_game == true) {
       enableWaitingAnimation(false);
+      enableInput(true)
     }
     else if (responseObject.leaver == true) {
       console.log("leaver procs");

@@ -158,7 +158,7 @@ function processGameOver(gameover = undefined, winlose = undefined) {
 }
 
 function prePlaceSymbol(cell) {
-  if (cell.innerHTML == "") {
+  if (cell.innerHTML == "" && currentSymbol != undefined) {
     cell.innerHTML = `<img src=/img/${currentSymbol}.svg>`
   }
 }
