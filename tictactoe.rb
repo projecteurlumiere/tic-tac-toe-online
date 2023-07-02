@@ -32,7 +32,8 @@ class Game
       board: @board[1] + @board[2] + @board[3],
       turn: turn,
       error: @change_error,
-      symbol: player_id.symbol
+      symbol: player_id.symbol,
+      gameover: gameover?
     }
 
     puts "!!!!player's symbol is #{player_id.symbol} and win is #{win}"

@@ -139,9 +139,13 @@ function highlightWhoseTurn(turn) {
   }
 }
 
-function processGameOver(winlose = undefined) {
-  if (winlose == undefined && gameFinished == false) {
+function processGameOver(gameover = undefined, winlose = undefined) {
+  if (winlose == undefined && gameover != true && gameFinished == false) {
     setStatusBarMessage("Opponent Left");
+  }
+  else if (winlose == undefined && gameover == true) {
+    setStatusBarMessage("Game over");
+    gameFinished = true;
   }
   else if (winlose == true) {
     setStatusBarMessage("You win!");
@@ -157,4 +161,14 @@ function prePlaceSymbol(cell) {
   if (cell.innerHTML == "") {
     cell.innerHTML = `<img src=/img/${currentSymbol}.svg>`
   }
+}
+
+function checkCellsForGameOver() {
+  console.log("checkcells procs")
+  cells.forEach(element => {
+    if (element.innerHTML == '') {
+      return false
+    }
+  });
+  return true
 }

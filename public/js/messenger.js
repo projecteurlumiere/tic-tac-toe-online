@@ -42,8 +42,8 @@ async function websocket(boardSize) {
 
       updateBoard(responseObject.board);
 
-      if (responseObject.win != undefined) {
-        processGameOver(responseObject.win);
+      if (responseObject.gameover == true) {
+        processGameOver(responseObject.gameover, responseObject.win);
         enableInput(false);
       }
       else if (responseObject.turn == responseObject.symbol) {

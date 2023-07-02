@@ -66,7 +66,7 @@ get '/' do
 end
 
 # // To server:
-# // msg: -1, 0 or 1-25; integer -1 if leave game, 0 if ready, 1-25 if make a choice TO DO
+# // msg: -1, 0 or 1-25; integer -1 if leave game, 0 if ready, 1-25 if make a choice
 
 # // emoji: emoji string to show TO DO
 
@@ -75,6 +75,7 @@ end
 # // board: Array; 
 # // turn: string x or o;
 # // symbol: X or O; string (this is your symbol)
+# // gameover: false or true when it's over
 # // error: boolean;
 # // win: boolean; (if none then undef)
-# // leaver: true (otherwise undefined) TO DO 
+# // leaver: true (otherwise undefined)
