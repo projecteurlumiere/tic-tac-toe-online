@@ -38,7 +38,8 @@
 
 #containerCustomGame > p {
   margin: 0 0 1rem 0;
-  font-size: 1rem
+  font-size: 1rem;
+  text-align: center;
 }
 
 #containerButtonsCustom {
@@ -99,3 +100,10 @@ button {
   background-color: #EBE77A;
   border: solid 0.2rem #EB6370;
 }
+
+@media (max-width: 480px) {
+  .buttonsSize {
+    font-size: 10vw;
+  }
+}
+

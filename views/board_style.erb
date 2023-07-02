@@ -1,0 +1,87 @@
+<%
+if @size == 3
+  media_max_width = "525"
+  query_cell_size = "100"
+  statusBarFont = "1"
+  marginTop = "10vh"
+  media_max_height = ""
+elsif @size == 5
+  media_max_width = "725"
+  query_cell_size = "60"
+  statusBarFont = "0.6"
+  marginTop = "0"
+  media_max_height = ", (max-height: 825px)"
+end
+%>
+
+<style type="text/css">
+  :root {
+      --size: <%=@size%>;
+      --cell-size: 100px;
+      --media-max-width: <%=media_max_width%>px;
+  }
+
+  main {
+    margin-top: <%=marginTop%>;
+  }  
+
+<%=
+"
+@media (max-width: #{media_max_width}px) {
+ 
+:root {
+    --cell-size: #{query_cell_size}px;
+  }
+
+  #gameContainer {
+    width: calc(var(--cell-size) * var(--size));
+    min-width: calc(var(--cell-size) * var(--size));
+  }
+
+  #statusBar {
+    font-size: #{statusBarFont}rem;
+  }
+
+  #gameContainerTop {
+    --cell-size: 100px;
+    --half-cell-size: calc(var(--cell-size) / 2);
+    grid-template: var(--half-cell-size) var(--cell-size) / var(--cell-size) var(--cell-size) var(--half-cell-size) var(--half-cell-size);
+  }
+
+  #gameContainerTopEmpty,
+  #buttonReload,
+  #buttonClose {
+    grid-row: 1;
+  }
+
+  #gameContainerTopEmpty {
+    grid-column: 1 / 3;
+  }
+
+  #buttonReload {
+    grid-column: 3;
+  }
+
+  #buttonClose {
+    grid-column: 4;
+  }
+
+  #avatarLeft,
+  #statusBar,
+  #avatarRight {
+    grid-row: 2;
+  }
+
+  #avatarRight {
+    grid-column: 3 / 5;
+  }
+
+  #nameLeft,
+  #nameRight {
+    position: absolute;
+    visibility: hidden;
+  }
+}
+"
+%>
+</style>

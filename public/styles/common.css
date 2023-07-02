@@ -11,7 +11,6 @@
 
 :root {
   --max-width: 600px;
-  --cell-size: 100px;
   --half-cell-size: calc(var(--cell-size) / 2);
   --standard-indent: 5vh;
   --scale:  scale(0.80); 
@@ -20,6 +19,7 @@
 
 body {
   height: 100vh;
+  margin: 0;
   background-color: #EBE77A;
 }
 
@@ -28,7 +28,7 @@ header {
 }
 
 main {
-  padding-top: 10vh;
+  margin: 10vh 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -39,3 +39,19 @@ main {
   pointer-events: none;
   
 }
+
+@media (max-height: 820px) {
+  body {
+    overflow-y: scroll;
+  }
+  
+  main {
+    margin: 0 0 15vh 0 !important;
+  }
+}
+/* 
+@media (max-height: 720px) {
+  main {
+    margin: 0 0 5vh 0 !important;
+  }
+} */

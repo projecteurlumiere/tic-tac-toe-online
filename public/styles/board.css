@@ -97,3 +97,51 @@
 .row {
   outline: solid 5px #EB6370;
 }
+
+/* @media (max-width: env(var(--media-max-width))) {
+  :root {
+    --cell-size: 60px;
+  }
+
+  #statusBar {
+    font-size: 0.6rem
+  }
+
+  #gameContainerTop {
+    grid-template: var(--half-cell-size) var(--cell-size) / var(--cell-size) var(--cell-size) var(--half-cell-size) var(--half-cell-size);
+  }
+
+  #gameContainerTopEmpty,
+  #buttonReload,
+  #buttonClose {
+    grid-row: 1;
+  }
+
+  #gameContainerTopEmpty {
+    grid-column: 1 / 3;
+  }
+
+  #buttonReload {
+    grid-column: 3;
+  }
+
+  #buttonClose {
+    grid-column: 4;
+  }
+
+  #avatarLeft,
+  #statusBar,
+  #avatarRight {
+    grid-row: 2;
+  }
+
+  #avatarRight {
+    grid-column: 3 / 5;
+  }
+
+  #nameLeft,
+  #nameRight {
+    position: absolute;
+    visibility: hidden;
+  }
+} */
