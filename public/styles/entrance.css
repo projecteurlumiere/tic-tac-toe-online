@@ -6,7 +6,8 @@
 }
 
 #containerEntranceTop > h4 {
-  margin: 0 0 1rem 0;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
 }
 
 #constainerButtonsSize {
@@ -15,7 +16,6 @@
   justify-content: center;
   align-items: center;
   max-width: var(--max-width);
-  
 }
 
 .buttonsSize {
@@ -33,10 +33,12 @@
 
 #containerCustomGame > h4 {
   margin: 0 0 0.5rem 0;
+  font-size: 1.5rem
 }
 
 #containerCustomGame > p {
   margin: 0 0 1rem 0;
+  font-size: 1rem
 }
 
 #containerButtonsCustom {
@@ -88,7 +90,12 @@ button {
 
 /* Temani Afif's button over */
 
+#linkInput {
+  font-size: 1rem;
+}
+
 .buttonsCustom {
-  font-family: system-ui, sans-serif;
-  font-weight: bold; 
+  font-size: 1rem;
+  background-color: #EBE77A;
+  border: solid 0.2rem #EB6370;
 }
