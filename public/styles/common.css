@@ -42,7 +42,7 @@ main {
 
 @media (max-height: 820px) {
   body {
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   
   main {
