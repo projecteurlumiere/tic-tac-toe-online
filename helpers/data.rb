@@ -57,7 +57,7 @@ end
 
 def rematch(player_id, websocket)
   delete_current_game(player_id) if game_exist?(player_id)
-  $matchmaker.process_player(player_id, websocket)
+  $matchmaker.new_player(player_id, websocket)
 end
 
 def game_exist?(player_id)
