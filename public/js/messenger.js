@@ -1,8 +1,8 @@
 async function websocket(boardSize) {
-  socket = new WebSocket(`ws://${serverAddress}`);
+  socket = new WebSocket(`ws://${serverAddress}/game`);
 
   socket.onopen = async () => {
-    if (htmlFetched == false) { 
+    if (htmlFetched == false) {
       selectMainBody();
       await updateMain(boardSize);
       selectBoardElements();
@@ -37,7 +37,7 @@ async function websocket(boardSize) {
         currentSymbolSet = true;
       }
 
-      if (avatarsSet == false) { 
+      if (avatarsSet == false) {
         updateAvatars(responseObject.symbol);
         selectAvatars();
       }
@@ -68,7 +68,7 @@ async function websocket(boardSize) {
 
 // From server:
 // found_game: boolean; false or true when found game; otherwise UNDEFINED (null)
-// board: Array; 
+// board: Array;
 // turn: boolean; (true if turn is yours)
 // symbol: X or O; string (this is your symbol)
 // error: boolean;
