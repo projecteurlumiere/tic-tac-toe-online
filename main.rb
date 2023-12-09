@@ -1,10 +1,4 @@
-require 'sinatra'
-require 'sinatra-websocket'
-require 'require_all'
-
-require 'json'
-require 'yaml'
-require 'pathname'
+Bundler.require
 
 require_relative 'tictactoe'
 require_relative 'matchmaker'
@@ -72,7 +66,7 @@ end
 
 # // From server:
 # // found_game: boolean; false or true when found game; otherwise UNDEFINED (null)
-# // board: Array; 
+# // board: Array;
 # // turn: string x or o;
 # // symbol: X or O; string (this is your symbol)
 # // gameover: false or true when it's over
