@@ -119,6 +119,7 @@
 
 .emoPic.shown {
   display: block;
+  /* position absolute & fixed doesn't work as intended in ipad safari. why? */
   position: absolute;
   top: 50%;
   right: 30%;
