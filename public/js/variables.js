@@ -16,6 +16,10 @@ let nameLeft;
 let nameRight;
 let currentSymbol;
 
+let emotionsContainer;
+let emotionsArray;
+let emoPicArray;
+
 let htmlFetched = false;
 let avatarsSet = false;
 let currentSymbolSet = false;

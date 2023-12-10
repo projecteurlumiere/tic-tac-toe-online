@@ -29,6 +29,24 @@ async function websocket(boardSize) {
       enableInput(false);
       processGameOver();
     }
+    else if (responseObject.emotion) {
+      console.log("emotion triggered");
+      console.log(currentSymbol);
+      console.log(responseObject.emotion);
+
+      emoPicArray.forEach(em => { em.classList.remove("shown") })
+
+      emoPicArray.forEach(em => {
+        console.log(currentSymbol);
+        console.log(em.dataset.symbol);
+        console.log(em.dataset.id);
+        if (em.dataset.symbol != currentSymbol && em.dataset.id == responseObject.emotion) {
+          console.log("TRUE");
+
+          showEmote(em);
+        }
+      });
+    }
     else if (htmlFetched == true && responseObject.board) {
       gameFinished = false
 
@@ -74,3 +92,4 @@ async function websocket(boardSize) {
 // error: boolean;
 // win: boolean; (if none then undef)
 // leaver: true (otherwise undefined)
+// emote: emote_id [-2 = happy; -3 = scared; -4 = crying]

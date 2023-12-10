@@ -20,6 +20,8 @@ get "/game" do
       when -1
         leave if game_exist?(@player_id)
         replay
+      when -5..-2
+        emote
       when 1..25
         return unless game_exist?(@player_id)
         turn
@@ -57,6 +59,10 @@ end
 
 def replay
   rematch(@player_id, @websocket)
+end
+
+def emote
+  send_emote(@player_id, @websocket, @response)
 end
 
 def turn
