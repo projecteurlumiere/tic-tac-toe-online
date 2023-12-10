@@ -51,7 +51,10 @@ function arrangeEmotions() {
   [avatarLeft, closeEmotions].forEach((element)=> {
     element.addEventListener("click", () => {
       console.log("click on left image procs!");
-      emotionsContainer.classList.toggle("invisible")
+      console.log(element.innerText);
+      console.log(element.innerHTML);
+      if (element == avatarLeft && element.innerHTML === "") return
+      emotionsContainer.classList.toggle("invisible");
     })
   });
 
