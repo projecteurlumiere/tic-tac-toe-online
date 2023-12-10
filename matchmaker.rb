@@ -26,9 +26,10 @@ class Matchmaker
       player_id = assign_player_id
       add_player(player_id, socket)
     end
+
     if @players_queue.empty?
       @players_queue << player_id
-    else
+    elsif @players_queue.none?(player_id)
       create_game(player_id)
     end
     puts "#{player_id} is processed"
