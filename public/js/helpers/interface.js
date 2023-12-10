@@ -64,7 +64,16 @@ function arrangeEmotions() {
       sendMsg(socket, em.dataset.id);
       closeEmotions.click();
 
-      showEmote(em);
+      let emPic;
+
+      emoPicArray.forEach(em => { em.classList.remove("shown") })
+      emoPicArray.forEach((pic) => {
+        if (pic.dataset.symbol == currentSymbol && em.dataset.id ==  pic.dataset.id) {
+          emPic = pic
+        }
+      })
+
+      showEmote(emPic);
 
     })
   })
