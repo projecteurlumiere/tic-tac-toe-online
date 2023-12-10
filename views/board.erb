@@ -9,8 +9,29 @@
     <div id="statusBar"></div>
     <div id="nameRight"></div>
     <div id="avatarRight"></div>
+    <div id="emotions" class="invisible">
+      <ul>
+        <div id="closeEmotions"><img src="img/close-thick.svg"></div>
+        <li class="emotion" data-id="-5">Regular</li>
+        <li class="emotion" data-id="-2">Happy</li>
+        <li class="emotion" data-id="-3">Scared</li>
+        <li class="emotion" data-id="-4">Cry</li>
+      </ul>
+    </div>
+    <div id="emoPics">
+      <div>
+        <img class="emoPic" data-symbol="x" data-id="-2" src="img/x_happy.svg">
+        <img class="emoPic" data-symbol="x" data-id="-3" src="img/x_scared.svg">
+        <img class="emoPic" data-symbol="x" data-id="-4" src="img/x_cry.svg">
+        <img class="emoPic" data-symbol="x" data-id="-5" src="img/x_eyes.svg">
+        <img class="emoPic" data-symbol="o" data-id="-2" src="img/o_happy.svg">
+        <img class="emoPic" data-symbol="o" data-id="-3" src="img/o_scared.svg">
+        <img class="emoPic" data-symbol="o" data-id="-4" src="img/o_cry.svg">
+        <img class="emoPic" data-symbol="o" data-id="-5" src="img/o_eyes.svg">
+      </div>
+    </div>
   </div>
-  <%= 
+  <%=
   output = ""
   i = 0
   @size.times do

@@ -8,6 +8,19 @@ def parse_json(json)
   parsed_json
 end
 
+def send_emote(player_id, websocket, emotion_id) # -2 = happy; -3 = scared; -4 = crying
+  hash = {
+    emotion: emotion_id
+  }
+
+  # websocket.send JSON.generate(hash)
+  begin
+    get_opponent_socket(player_id).send JSON.generate(hash)
+  rescue NoMethodError
+    puts "no opponent to send to"
+  end
+end
+
 def notify_game_status(player_id, websocket, status)
   websocket.send JSON.generate(
     {

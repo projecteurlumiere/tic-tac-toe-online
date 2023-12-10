@@ -7,6 +7,7 @@ async function updateMain(boardSize){
     arrangeBoard();
     htmlFetched = true;
     selectBoardElements();
+    arrangeEmotions();
   }
   else {
     main.innerHTML = "<p>cannot fetch the board :(</p>";
@@ -17,12 +18,12 @@ function arrangeButtons() {
   buttonReload = document.getElementById("buttonReload");
   buttonClose = document.getElementById("buttonClose");
 
-  buttonReload.addEventListener("click", () => { 
+  buttonReload.addEventListener("click", () => {
     notifyLeaveGame();
     resetBoard();
     pingReady();
   });
-  buttonClose.addEventListener("click", () => { 
+  buttonClose.addEventListener("click", () => {
     notifyLeaveGame();
     // clearBoard();
     window.location.href = `http://${serverAddress}`;
@@ -30,11 +31,11 @@ function arrangeButtons() {
 }
 
 function arrangeBoard() {
-  board = document.getElementById("board"); 
+  board = document.getElementById("board");
 
   board.addEventListener("click", (event) => {
     if (event.target.className != "cell" ||
-    event.target.innerHTML == undefined) { 
+    event.target.innerHTML == undefined) {
       return
     }
     else {
@@ -44,7 +45,54 @@ function arrangeBoard() {
   })
 }
 
-function resetBoard(){ 
+function arrangeEmotions() {
+  emotionsContainer = document.querySelector("#emotions");
+  let closeEmotions = document.querySelector("#closeEmotions");
+  [avatarLeft, closeEmotions].forEach((element)=> {
+    element.addEventListener("click", () => {
+      console.log("click on left image procs!");
+      console.log(element.innerText);
+      console.log(element.innerHTML);
+      if (element == avatarLeft && element.innerHTML === "") return
+      emotionsContainer.classList.toggle("invisible");
+    })
+  });
+
+  emotionsArray = document.querySelectorAll(".emotion");
+  emoPicArray = document.querySelectorAll(".emoPic");
+
+  emotionsArray.forEach((em) => {
+    em.addEventListener("click", () => {
+      console.log(`click happens with id ${em.dataset.id}`);
+      sendMsg(socket, em.dataset.id);
+      closeEmotions.click();
+
+      let emPic;
+
+      emoPicArray.forEach(em => { em.classList.remove("shown") })
+      emoPicArray.forEach((pic) => {
+        if (pic.dataset.symbol == currentSymbol && em.dataset.id ==  pic.dataset.id) {
+          emPic = pic
+        }
+      })
+
+      showEmote(emPic);
+
+    })
+  })
+}
+
+function showEmote(em) {
+  em.classList.add("shown");
+  em.onclick = () => {
+    em.classList.remove("shown");
+  }
+  setTimeout(() => {
+    em.classList.remove("shown")
+  }, 5700)
+}
+
+function resetBoard(){
   updateAvatars();
   currentSymbolSet = false;
   setStatusBarMessage();
@@ -56,7 +104,7 @@ function updateBoard(board_array = undefined){
     cells.forEach(cell => {
       cell.innerHTML = "";
     });
-  } 
+  }
   else {
     i = 0;
     cells.forEach(cell => {
@@ -75,7 +123,7 @@ function enableInput(boolean){
   if (boolean == true) {
     board.classList.remove("unclickable");
   }
-  else { 
+  else {
     board.classList.add("unclickable");
   }
 }
@@ -122,7 +170,7 @@ function enableWaitingAnimation(boolean, boardSize = undefined) {
   if (boolean == true) {
     setStatusBarMessage("Searching for opponent");
     cells[getCentralCell()].innerHTML = `<img src=/img/searching.svg>`
-    
+
   }
   else if (boolean == false) {
     setStatusBarMessage();

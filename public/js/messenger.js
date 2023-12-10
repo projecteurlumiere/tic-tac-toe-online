@@ -1,8 +1,8 @@
 async function websocket(boardSize) {
-  socket = new WebSocket(`ws://${serverAddress}`);
+  socket = new WebSocket(`ws://${serverAddress}/game`);
 
   socket.onopen = async () => {
-    if (htmlFetched == false) { 
+    if (htmlFetched == false) {
       selectMainBody();
       await updateMain(boardSize);
       selectBoardElements();
@@ -29,6 +29,24 @@ async function websocket(boardSize) {
       enableInput(false);
       processGameOver();
     }
+    else if (responseObject.emotion) {
+      console.log("emotion triggered");
+      console.log(currentSymbol);
+      console.log(responseObject.emotion);
+
+      emoPicArray.forEach(em => { em.classList.remove("shown") })
+
+      emoPicArray.forEach(em => {
+        console.log(currentSymbol);
+        console.log(em.dataset.symbol);
+        console.log(em.dataset.id);
+        if (em.dataset.symbol != currentSymbol && em.dataset.id == responseObject.emotion) {
+          console.log("TRUE");
+
+          showEmote(em);
+        }
+      });
+    }
     else if (htmlFetched == true && responseObject.board) {
       gameFinished = false
 
@@ -37,7 +55,7 @@ async function websocket(boardSize) {
         currentSymbolSet = true;
       }
 
-      if (avatarsSet == false) { 
+      if (avatarsSet == false) {
         updateAvatars(responseObject.symbol);
         selectAvatars();
       }
@@ -68,9 +86,10 @@ async function websocket(boardSize) {
 
 // From server:
 // found_game: boolean; false or true when found game; otherwise UNDEFINED (null)
-// board: Array; 
+// board: Array;
 // turn: boolean; (true if turn is yours)
 // symbol: X or O; string (this is your symbol)
 // error: boolean;
 // win: boolean; (if none then undef)
 // leaver: true (otherwise undefined)
+// emote: emote_id [-2 = happy; -3 = scared; -4 = crying]

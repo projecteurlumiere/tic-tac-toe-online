@@ -5,6 +5,8 @@
   align-items: center;
   width: calc(var(--cell-size) * var(--size) + 2 * var(--cell-size));
   min-width: calc(var(--cell-size) * var(--size) + 2 * var(--cell-size));
+
+  position: relative;
 }
 
 #gameContainerTop {
@@ -76,6 +78,80 @@
 #statusBar {
   text-align: center;
 }
+
+.invisible {
+  display: none;
+}
+
+#emotions {
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  font-size: calc(1em * 1.5);
+  background-color: #c2bf69;
+  border: solid 6px gray;
+  border-radius: 3px;
+  padding: 5px 5px 0 10px;
+}
+
+#emotions * {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+#emotions li {
+  margin-bottom: 0.5ch;
+}
+
+#closeEmotions {
+  text-align: right;
+}
+
+#closeEmotions * {
+  max-height: 35px;
+}
+
+.emoPic {
+  display: none;
+}
+
+.emoPic.shown {
+  display: block;
+  /* position absolute & fixed doesn't work as intended in ipad safari. why? */
+  position: absolute;
+  top: 50%;
+  right: 30%;
+  max-height: 200px;
+
+  transform: scaleX(-1);
+
+  animation-duration: 3s;
+  animation-name: emote;
+  animation-iteration-count: 2;
+  /* animation-direction: alternate; */
+}
+
+@keyframes emote {
+  from {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(15deg);
+  }
+
+  75% {
+    transform: rotate(-15deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+
 
 #board {
   display: flex;

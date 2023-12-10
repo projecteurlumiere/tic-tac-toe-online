@@ -31,11 +31,9 @@ def game_start_notified?(player_id)
 end
 
 def delete_player_upon_leaving(player_id)
-  if access_player_hash(player_id)[:current_game]
-    delete_current_game(player_id)
-  elsif $matchmaker.players_queue.any?(player_id)
-    delete_from_queue(player_id)
-  end
+  delete_current_game(player_id) if access_player_hash(player_id)[:current_game]
+  delete_from_queue(player_id) if $matchmaker.players_queue.any?(player_id)
+
   delete_player(player_id)
 end
 
@@ -57,7 +55,7 @@ end
 
 def rematch(player_id, websocket)
   delete_current_game(player_id) if game_exist?(player_id)
-  $matchmaker.process_player(player_id, websocket)
+  $matchmaker.new_player(player_id, websocket)
 end
 
 def game_exist?(player_id)
