@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-ruby "~> 3.1"
+ruby "~> 3.2.2"
 
 gem "sinatra", "~> 3.0"
 gem "sinatra-websocket", "~> 0.3.1"
